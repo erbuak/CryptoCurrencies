@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="alert alert-info" role="alert" id="loading-message">
+    Data yüklenmesi zaman alacaktır. Lütfen bekleyin...
+</div>
+
+<table class="table table-bordered" id="currency-table">
+    <tbody></tbody>
+</table>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#loading-message').show();
+            $.ajax({
+                type: 'GET',
+                url: 'https://api.coingecko.com/api/v3/coins/list',
+                success: function (result) {
+                    $('#currency-table').append('<thead><tr><th>Id</th><th>Sembol</th><th>Ad</th></tr></thead>');
+                    $.each(result, function (i, item) {
+                        $('#currency-table tbody').append('<tr><td>' + item.id + '</td><td>' + item.symbol + '</td><td>' + item.name + '</td></tr>');
+                    });
+                },
+                complete: function () {
+                    $('#loading-message').hide();
+                },
+                error: function () {
+                    alert('Talep esnasında sorun oluştu.Yeniden deneyin');
+                }
+            });
+        });
+    </script>
+}
